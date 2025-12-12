@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import MainScreen from './src/screens/MainScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import HomeTabs from './src/navigation/HomeTabs';
 
 
 const Stack = createStackNavigator();
@@ -17,10 +18,9 @@ export default function App() {
   return(
     <PaperProvider>
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Welcome">
+            <Stack.Navigator screenOptions={{ headerShown: false}}>
               <Stack.Screen name="Welcome" component = {WelcomeScreen} />
-              <Stack.Screen name= "Main" component = {MainScreen} />
-              <Stack.Screen name= "Settings" component = {SettingsScreen} />
+              <Stack.Screen name="HomeTabs" component = {HomeTabs} />
             </Stack.Navigator>
         </NavigationContainer>
     </PaperProvider>

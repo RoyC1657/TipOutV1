@@ -6,8 +6,8 @@ export default function WelcomeScreen({ navigation }) {
 
   useEffect( () => {
     const timer = setTimeout(() => {
-      navigation.replace('Main'); //Moves to MainScreen 
-    }, 3000);                     //Sets delay for above function. Set to 3 seconds by default
+      navigation.replace('HomeTabs'); //Moves to HomeTabs Screen where the Main Screen is loaded first by default 
+    }, 3000);                         //Sets delay for above function. Set to 3 seconds by default
     
     return () => clearTimeout(timer);
   }, []);
