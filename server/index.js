@@ -1,7 +1,9 @@
 const express = require('express')
 const cors = require('cors')
 const db = require('./db')
+
 const employeeRoutes = require('./routes/employee')
+const shiftRoutes = require('./routes/shifts')
 
 const app = express()
 const PORT = 3000
@@ -14,6 +16,7 @@ app.use(cors())
 app.use(express.json())
 
 app.use('/employees', employeeRoutes)
+app.use('/shifts', shiftRoutes)
 
 app.get('/',(req, res) => {
     res.send("TipOutV1 is Running...")
