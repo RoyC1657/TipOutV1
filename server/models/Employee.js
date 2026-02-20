@@ -9,6 +9,9 @@ const db = require('../db')
 */
 
 class Employee {
+    #name   //Private name and roles variable
+    #roles
+
   constructor(name, roles) {
     this.name = name
     this.roles = roles

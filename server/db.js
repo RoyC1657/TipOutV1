@@ -13,7 +13,8 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     date TEXT NOT NULL,
     total_cash REAL NOT NULL,
-    total_credit REAL NOT NULL
+    total_credit REAL NOT NULL,
+    total_tips REAL NOT NULL
   );
 
   CREATE TABLE IF NOT EXISTS shift_employees (
