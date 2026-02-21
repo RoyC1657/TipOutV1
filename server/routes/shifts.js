@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Shift = require('../models/Shift')
+const { calculateDenominations } = require('../denominationCalculator')
 
 // GET all shifts
 router.get('/', async (_req, res) => {
@@ -22,6 +23,13 @@ router.post('/:id/employees', async (req, res) => {
   if (!shift) return res.status(404).json({ message: 'Shift not found' })
   await shift.addEmployee(employee_id, hours_worked, role_worked)
   res.json({ message: 'Employee added to shift' })
+})
+
+// POST - calculate denominations for a shift based on available bills and payouts
+router.post('/:id/denominations', async (req, res) => {
+  const { availableBills, payouts } = req.body
+  const result = calculateDenominations(payouts, availableBills)
+  res.json(result)
 })
 
 // GET - full summary of shift including workers
