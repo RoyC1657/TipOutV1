@@ -1,18 +1,24 @@
 const express = require('express')
 const router = express.Router()
-const db = require('../db')
+const Employee = require('../models/Employee')
 
 //GET all employees
 router.get('/',(req,res) => {
-    const employees = db.prepare('SELECT * FROM employees').all()
+    const employees = Employee.getAll()
     res.json(employees)
 })
 
 //POST - add a new employee
 router.post('/', (req, res) => {
     const { name, role } = req.body
-    const result = db.prepare('INSERT INTO employees (name, role) VALUES (?,?)').run(name,role)
-    res.json({ id: result.lastInsertRowid, name, role })
+    const employee = new Employee(name, roles).save()
+    res.json(employee)
+})
+
+//DELETE - remove an employee
+router.delete('/:id', (req, res) => {
+    Employee.delete(req.params.id)
+    res.json({ message: 'Employee deleted' })
 })
 
 module.exports = router
