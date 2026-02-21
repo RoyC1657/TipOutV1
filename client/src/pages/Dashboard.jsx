@@ -8,10 +8,14 @@ export default function Dashboard() {
     const [employees, setEmployees] = useState([])
 
     useEffect(() => {
-        axios.get(`${import.meta.env.VITE_API_URL}/shifts`)
+      axios.get(`${import.meta.env.VITE_API_URL}/shifts`)
             .then(response => setShifts(response.data))
-        axios.get('http://localhost:3000/employees')
-            axios.get(`${import.meta.env.VITE_API_URL}/employees`)
+        useEffect(() => {
+      axios.get(`${import.meta.env.VITE_API_URL}/shifts`)
+        .then(response => setShifts(response.data))
+      axios.get(`${import.meta.env.VITE_API_URL}/employees`)
+        .then(response => setEmployees(response.data))
+}, [])
     }, [])
 
     const totalCash = shifts.reduce((total, s) => total + s.total_cash, 0)
