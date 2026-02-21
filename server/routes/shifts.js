@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Shift = require('../models/Shift')
-const { calculateDenominations } = require('../denominationCalculator')
+const { calculateDenominations } = require('../denominatorCalculator')
 
 // GET all shifts
 router.get('/', async (_req, res) => {
