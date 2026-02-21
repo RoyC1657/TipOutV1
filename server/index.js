@@ -13,7 +13,7 @@ const PORT = 3000
     Express.json translates the incoming JSON file from the React app into data the server can use
 */
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://tip-out-v1.vercel.app']
+  origin: ['http://localhost:5173', 'https://clydztipout.vercel.app']
 }))
 
 app.use(express.json())
