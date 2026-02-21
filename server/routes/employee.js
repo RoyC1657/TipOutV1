@@ -3,21 +3,21 @@ const router = express.Router()
 const Employee = require('../models/Employee')
 
 //GET all employees
-router.get('/',(req,res) => {
-    const employees = Employee.getAll()
+router.get('/', async (_req, res) => {
+    const employees = await Employee.getAll()
     res.json(employees)
 })
 
 //POST - add a new employee
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const { name, roles } = req.body
-    const employee = new Employee(name, roles).save()
+    const employee = await new Employee(name, roles).save()
     res.json(employee)
 })
 
 //DELETE - remove an employee
-router.delete('/:id', (req, res) => {
-    Employee.delete(req.params.id)
+router.delete('/:id', async (req, res) => {
+    await Employee.delete(req.params.id)
     res.json({ message: 'Employee deleted' })
 })
 
