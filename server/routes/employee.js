@@ -10,7 +10,7 @@ router.get('/',(req,res) => {
 
 //POST - add a new employee
 router.post('/', (req, res) => {
-    const { name, role } = req.body
+    const { name, roles } = req.body
     const employee = new Employee(name, roles).save()
     res.json(employee)
 })

@@ -1,46 +1,43 @@
 const db = require('../db')
+const { calculateTipout } = require('../tipoutCalculator')
 
 class Shift {
-    #shiftID
-    #date
-    #supportHours
-    #serverHours
-    #totalCashTip
-    #totalCreditTip
-    #totalTip
-    
-    constructor(date, totalCashTip, totalCreditTip) {
-        this.#date = date
-        this.#totalCashTip = totalCashTip
-        this.#totalCreditTip = totalCreditTip
-        this.#totalTip = totalCashTip + totalCreditTip
-    }
+  #shiftID
+  #date
+  #totalCashTip
+  #totalCreditTip
+  #totalTip
 
-    save() {
-        const result = db.prepare(
-            'INSERT INTO Shifts (date, total_cash, total_credit) VALUES (?, ?, ?)'
-        ).run(this.#date, this.#totalCashTip, this.totalCreditTip)
-        this.#shiftID = result.lastInsertRowid
-        return this
-    }
+  constructor(date, totalCashTip, totalCreditTip) {
+    this.#date = date
+    this.#totalCashTip = totalCashTip
+    this.#totalCreditTip = totalCreditTip
+    this.#totalTip = totalCashTip + totalCreditTip
+  }
 
-    get shiftID() {return this.#shiftID}
-    get date() {return this.#date }
-    get totalCashTip() {return this.#totalCashTip }
-    get totalCreditTip() { return this.#totalCreditTip}
+  get id() { return this.#shiftID }
+  get date() { return this.#date }
+  get totalCash() { return this.#totalCashTip }
+  get totalCredit() { return this.#totalCreditTip }
 
-    //Adds Employee to current shift
-    addEmployee(employeeId, hoursWorked) {
-        db.prepare(
-            'INSERT INTO shift_employees (shift_id, employee_id, hours_worked) VALUES (?, ?, ?)'
-        ).run(this.#shiftID, employeeId, hoursWorked )
-        return this
-    }
+  save() {
+    const result = db.prepare(
+      'INSERT INTO shifts (date, total_cash, total_credit) VALUES (?, ?, ?)'
+    ).run(this.#date, this.#totalCashTip, this.#totalCreditTip)
+    this.#shiftID = result.lastInsertRowid
+    return this
+  }
 
-    //Gets all employees who worked on this shift
-    getEmployees() {
+  addEmployee(employeeId, hoursWorked, roleWorked) {
+    db.prepare(
+      'INSERT INTO shift_employees (shift_id, employee_id, hours_worked, role_worked) VALUES (?, ?, ?, ?)'
+    ).run(this.#shiftID, employeeId, hoursWorked, roleWorked)
+    return this
+  }
+
+  getEmployees() {
     return db.prepare(`
-      SELECT se.hours_worked, e.name, e.roles
+      SELECT se.hours_worked, se.role_worked, e.name, e.roles
       FROM shift_employees se
       JOIN employees e ON se.employee_id = e.id
       WHERE se.shift_id = ?
@@ -53,19 +50,18 @@ class Shift {
   getServerHours() {
     const employees = this.getEmployees()
     return employees
-        .filter(e => e.roles.includes('server') || e.roles.includes('bartender'))
-        .reduce((total, e) => total + e.hoursWorked, 0)    //Calculates total server hours worked this shift
+      .filter(e => e.role_worked === 'server' || e.role_worked === 'bartender')
+      .reduce((total, e) => total + e.hours_worked, 0)
   }
 
-   getSupportHours() {
+  getSupportHours() {
     const employees = this.getEmployees()
     return employees
-        .filter(e => e.roles.includes('foodrunner') || e.roles.includes('barback'))
-        .reduce((total, e) => total + e.hoursWorked, 0)    //Calculates total support hours worked this shift
+      .filter(e => e.role_worked === 'foodrunner' || e.role_worked === 'barback')
+      .reduce((total, e) => total + e.hours_worked, 0)
   }
 
-  // Get a full summary of the shift including all workers
-  getSummary(){
+  getSummary() {
     const employees = this.getEmployees()
     return {
       id: this.#shiftID,
@@ -78,8 +74,21 @@ class Shift {
     }
   }
 
+  calculate() {
+    const employees = this.getEmployees()
+    return calculateTipout(this, employees)
+  }
+
   static getAll() {
     return db.prepare('SELECT * FROM shifts').all()
+  }
+
+  static getById(id) {
+    const data = db.prepare('SELECT * FROM shifts WHERE id = ?').get(id)
+    if (!data) return null
+    const shift = new Shift(data.date, data.total_cash, data.total_credit)
+    shift.#shiftID = data.id
+    return shift
   }
 
   static delete(id) {
