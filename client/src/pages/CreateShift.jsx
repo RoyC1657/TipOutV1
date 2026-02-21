@@ -61,9 +61,7 @@ export default function CreateShift() {
                 total_credit: parseFloat(totalCredit)
             })
 
-            console.log('shift response:', shiftResponse.data)
             const shiftId = shiftResponse.data.id
-            console.log('shift id:', shiftId)
 
 
             // Add each employee to the shift with their hours and role worked
