@@ -11,9 +11,9 @@ export default function Results() {
 
     useEffect(() => {
         // Fetch both calculation and the shift summary
-        axios.get(`http://localhost:3000/shifts/${id}/calculate`)
+        axios.get(`${import.meta.env.VITE_API_URL}/shifts/${id}/calculate`)
             .then(response => setResults(response.data))
-        axios.get(`http://localhost:3000/shifts/${id}/summary`)
+        axios.get(`${import.meta.env.VITE_API_URL}/shifts/${id}/summary`)
             .then(response => setSummary(response.data))
     }, [id])
 

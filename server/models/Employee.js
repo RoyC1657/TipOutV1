@@ -1,7 +1,7 @@
-const db = require('../db')
+const pool = require('../db')
 
 /*
-    Employee class that represents all atributes that employees have. As well as
+    Employee class that represents all attributes that employees have. As well as
     including setter and getter functions
 
     @params String name, String[] roles
@@ -9,53 +9,54 @@ const db = require('../db')
 */
 
 class Employee {
-    #name   //Private name and roles variable
-    #roles
-
   constructor(name, roles) {
-    this.name = name
-    this.roles = roles
+    this._name = name
+    this._roles = roles
+    this._id = null
   }
 
-  save() {
-    const result = db.prepare(
-      'INSERT INTO employees (name, roles) VALUES (?, ?)'
-    ).run(this.name, JSON.stringify(this.roles))
-    this.id = result.lastInsertRowid
+  get id() { return this._id }
+  get name() { return this._name }
+  get roles() { return this._roles }
+
+  async save() {
+    const result = await pool.query(
+      'INSERT INTO employees (name, roles) VALUES ($1, $2) RETURNING id',
+      [this._name, JSON.stringify(this._roles)]
+    )
+    this._id = result.rows[0].id
     return this
   }
 
-
-  static getAll() {
-    const employees = db.prepare('SELECT * FROM employees').all()
-    return employees.map(e => ({
+  static async getAll() {
+    const result = await pool.query('SELECT * FROM employees')
+    return result.rows.map(e => ({
       ...e,
-      roles: JSON.parse(e.roles)     //Translates the incoming JSON data, roles, back into a usable javascript array
+      roles: JSON.parse(e.roles)  // Translates the incoming JSON data, roles, back into a usable javascript array
     }))
   }
 
-  static getById(id) {
-    const employee = db.prepare('SELECT * FROM employees WHERE id = ?').get(id)
-    if (!employee) return null
+  static async getById(id) {
+    const result = await pool.query('SELECT * FROM employees WHERE id = $1', [id])
+    if (!result.rows[0]) return null
     return {
-      ...employee,
-      roles: JSON.parse(employee.roles)
+      ...result.rows[0],
+      roles: JSON.parse(result.rows[0].roles)
     }
   }
 
-  static getByName(name) {
-    const employee = db.prepare('SELECT * FROM employees WHERE name = ?').get(name)
-    if (!employee) return null
+  static async getByName(name) {
+    const result = await pool.query('SELECT * FROM employees WHERE name = $1', [name])
+    if (!result.rows[0]) return null
     return {
-        ...employee,
-        roles: JSON.parse(employee.roles)
+      ...result.rows[0],
+      roles: JSON.parse(result.rows[0].roles)
     }
   }
 
-  static delete(id) {
-    return db.prepare('DELETE FROM employees WHERE id = ?').run(id)
+  static async delete(id) {
+    await pool.query('DELETE FROM employees WHERE id = $1', [id])
   }
-
 }
 
 module.exports = Employee

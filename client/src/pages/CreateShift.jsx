@@ -13,7 +13,7 @@ export default function CreateShift() {
 
     // Fetch all employees when page loads
     useEffect(() => {
-        axios.get('http://localhost:3000/employees')
+        axios.get(`${import.meta.env.VITE_API_URL}/employees`)
             .then(response => setEmployees(response.data))
     }, [])
 
@@ -55,7 +55,7 @@ export default function CreateShift() {
         
         try {
             //Create the shift
-            const shiftResponse = await axios.post('http://localhost:3000/shifts', {
+            const shiftResponse = await axios.post(`${import.meta.env.VITE_API_URL}/shifts`, {
                 date,
                 total_cash: parseFloat(totalCash),
                 total_credit: parseFloat(totalCredit)
@@ -66,7 +66,7 @@ export default function CreateShift() {
 
             // Add each employee to the shift with their hours and role worked
             await Promise.all(selectedEmployees.map(emp => 
-                axios.post(`http://localhost:3000/shifts/${shiftId}/employees`, {
+                axios.post(`${import.meta.env.VITE_API_URL}/shifts/${shiftId}/employees`, {
                     employee_id: emp.id,
                     hours_worked: parseFloat(emp.hours),
                     role_worked: emp.roleWorked

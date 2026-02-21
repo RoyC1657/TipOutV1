@@ -7,12 +7,12 @@ export default function ShiftHistory() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        axios.get('http://localhost:3000/shifts')
+        axios.get(`${import.meta.env.VITE_API_URL}/shifts`)
             .then(response => setShifts(response.data))
     }, [])
     
     function handleDelete(id) {
-        axios.delete(`http://localhost:3000/shifts/${id}`)
+        axios.delete(`${import.meta.env.VITE_API_URL}/shifts/${id}`)
         .then(() => {
             setShifts(shifts.filter(shift => shift.id !== id))
         })

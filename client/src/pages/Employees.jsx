@@ -14,7 +14,7 @@ const [roles, setRoles] = useState([])
     }, [])
 
     function fetchEmployees () {
-        axios.get('http://localhost:3000/employees')
+        axios.get(`${import.meta.env.VITE_API_URL}/employees`)
             .then(response => setEmployees(response.data))
     }
 
@@ -31,7 +31,8 @@ const [roles, setRoles] = useState([])
   function handleSubmit(e) {
     e.preventDefault()
     if (!name || roles.length === 0) return
-    axios.post('http://localhost:3000/employees', { name, roles })
+    axios.post(`${import.meta.env.VITE_API_URL}/employees`, { name, roles })
+
         .then(() => {
             fetchEmployees()
             setName(' ')
@@ -42,7 +43,7 @@ const [roles, setRoles] = useState([])
 
 // Delete an employee
 function handleDelete(id) {
-    axios.delete(`http://localhost:3000/employees/${id}`)
+    axios.delete(`${import.meta.env.VITE_API_URL}/employees/${id}`)
         .then(() => fetchEmployees())
 }
 

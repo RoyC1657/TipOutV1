@@ -8,10 +8,10 @@ export default function Dashboard() {
     const [employees, setEmployees] = useState([])
 
     useEffect(() => {
-        axios.get('http://localhost:3000/shifts')
+        axios.get(`${import.meta.env.VITE_API_URL}/shifts`)
             .then(response => setShifts(response.data))
         axios.get('http://localhost:3000/employees')
-            .then(response => setEmployees(response.data))
+            axios.get(`${import.meta.env.VITE_API_URL}/employees`)
     }, [])
 
     const totalCash = shifts.reduce((total, s) => total + s.total_cash, 0)
