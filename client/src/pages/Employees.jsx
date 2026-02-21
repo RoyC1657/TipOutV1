@@ -46,28 +46,28 @@ function handleDelete(id) {
         .then(() => fetchEmployees())
 }
 
-  return (
+return (
     <div className="space-y-8">
-      <h1 className="text-3xl font-bold">Employees</h1>
+      <h1 className="text-3xl font-bold text-text">Employees</h1>
 
       {/* Add Employee Form */}
-      <div className="bg-gray-900 rounded-xl p-6 border border-gray-800">
-        <h2 className="text-xl font-semibold mb-4">Add Employee</h2>
+      <div className="bg-surface rounded-xl p-6 border border-border">
+        <h2 className="text-xl font-semibold mb-4 text-text">Add Employee</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
 
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Name</label>
+            <label className="block text-sm text-text-muted mb-1">Name</label>
             <input
               type="text"
               value={name}
               onChange={e => setName(e.target.value)}
               placeholder="Employee name"
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+              className="w-full bg-background border border-border rounded-lg px-4 py-2 text-text placeholder-text-muted focus:outline-none focus:border-primary"
             />
           </div>
 
           <div>
-            <label className="block text-sm text-gray-400 mb-2">Roles</label>
+            <label className="block text-sm text-text-muted mb-2">Roles</label>
             <div className="flex gap-4">
               {availableRoles.map(role => (
                 <label key={role} className="flex items-center gap-2 cursor-pointer">
@@ -75,9 +75,9 @@ function handleDelete(id) {
                     type="checkbox"
                     checked={roles.includes(role)}
                     onChange={() => handleRoleToggle(role)}
-                    className="accent-blue-500"
+                    className="accent-primary"
                   />
-                  <span className="capitalize text-sm">{role}</span>
+                  <span className="capitalize text-sm text-text">{role}</span>
                 </label>
               ))}
             </div>
@@ -85,7 +85,7 @@ function handleDelete(id) {
 
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded-lg transition"
+            className="bg-primary hover:bg-primary-hover text-text px-6 py-2 rounded-lg transition"
           >
             Add Employee
           </button>
@@ -94,21 +94,21 @@ function handleDelete(id) {
       </div>
 
       {/* Employee List */}
-      <div className="bg-gray-900 rounded-xl border border-gray-800">
-        <h2 className="text-xl font-semibold p-6 border-b border-gray-800">Staff</h2>
+      <div className="bg-surface rounded-xl border border-border">
+        <h2 className="text-xl font-semibold p-6 border-b border-border text-text">Staff</h2>
         {employees.length === 0 ? (
-          <p className="text-gray-500 p-6">No employees yet. Add one above.</p>
+          <p className="text-text-muted p-6">No employees yet. Add one above.</p>
         ) : (
           <ul>
             {employees.map(emp => (
-              <li key={emp.id} className="flex items-center justify-between px-6 py-4 border-b border-gray-800 last:border-0">
+              <li key={emp.id} className="flex items-center justify-between px-6 py-4 border-b border-border last:border-0">
                 <div>
-                  <p className="font-medium">{emp.name}</p>
-                  <p className="text-sm text-gray-400 capitalize">{emp.roles.join(', ')}</p>
+                  <p className="font-medium text-text">{emp.name}</p>
+                  <p className="text-sm text-text-muted capitalize">{emp.roles.join(', ')}</p>
                 </div>
                 <button
                   onClick={() => handleDelete(emp.id)}
-                  className="text-red-400 hover:text-red-300 text-sm transition"
+                  className="text-danger hover:text-red-300 text-sm transition"
                 >
                   Remove
                 </button>
