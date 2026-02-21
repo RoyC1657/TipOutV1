@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import DenominationCalculator from '../components/DenominationCalculator'
 import axios from 'axios'
 
 export default function Results() {
@@ -83,7 +84,8 @@ export default function Results() {
           </ul>
         </div>
       ))}
-
+    {/* Denomination Calculator */}
+    <DenominationCalculator results={results} shiftId={id} /> {/* This component would allow the user to input available bills and see how the payouts can be allocated in real denominations */}
     </div>
   )
 }
